@@ -1,15 +1,27 @@
 // models/aeroToken.js
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+import { Model } from 'sequelize';
 
-class AeroToken extends Model {}
+export default (sequelize, DataTypes) => {
+  class AeroToken extends Model {
+    static associate(models) {
+    }
+  }
 
 AeroToken.init(
   {
-    symbol: {
-      type: DataTypes.STRING,
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
       allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false, // This should be set to false
+    },
+    symbol: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     category: {
       type: DataTypes.STRING,
@@ -48,4 +60,5 @@ AeroToken.init(
   }
 );
 
-module.exports = AeroToken;
+  return AeroToken;
+};

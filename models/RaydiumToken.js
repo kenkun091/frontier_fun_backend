@@ -1,6 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-// import sequelize from '../config/database.js';
-// import { isAddress } from 'ethers';
+
 
 export default (sequelize, DataTypes) => {
   class RaydiumToken extends Model {}
@@ -13,7 +12,7 @@ export default (sequelize, DataTypes) => {
     },
     symbol: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     category: {
       type: DataTypes.STRING,

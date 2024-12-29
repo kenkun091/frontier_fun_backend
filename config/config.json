@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "your_username",
-    "password": "your_password",
+    "username": "admin",
+    "password": "admin1234",
     "database": "tokens_db",
     "host": "127.0.0.1",
     "dialect": "postgres"
@@ -14,9 +14,9 @@
     "dialect": "postgres"
   },
   "test": {
-    "username": "your_username",
-    "password": "your_password",
-    "database": "your_test_database_name",
+    "username": "admin",
+    "password": "admin1234",
+    "database": "tokens_db",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

@@ -1,8 +1,14 @@
 // models/Project.js
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+// const { Model, DataTypes } = require('sequelize');
+// const sequelize = require('../config/database');
 
-class Project extends Model {}
+import { Model } from 'sequelize';
+
+export default (sequelize, DataTypes) => {
+  class Project extends Model {
+    static associate(models) {
+    }
+  }
 
 Project.init(
   {
@@ -51,4 +57,5 @@ Project.init(
   }
 );
 
-module.exports = Project;
+return Project;
+};

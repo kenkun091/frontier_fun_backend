@@ -5,8 +5,8 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
         try {
-            const tokenData = await db.RaydiumToken.findOne({
-                where: { address: pair } 
+            const tokenData = await db.UniV3Token.findOne({
+                where: { address: pair }
             });
 
             if (!tokenData) {
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
                 tokenData
             });
         } catch (error) {
-            console.error('Error fetching Raydium token data:', error);
+            console.error('Error fetching UniV3 token data:', error);
             res.status(500).json({ success: false, message: 'Error fetching token data' });
         }
     } else {

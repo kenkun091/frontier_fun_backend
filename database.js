@@ -3,13 +3,15 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const dialect = "postgres";
+
 const sequelize = new Sequelize({
-  dialect: 'postgres',
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5432'),
   username: process.env.DB_USER || 'admin',
   password: process.env.DB_PASSWORD || 'admin1234',
   database: process.env.DB_NAME || 'tokens_db',
+  dialect: "postgres",
   logging: console.log, // Set to false in production
   pool: {
     max: 5, // Maximum number of connection in pool
@@ -18,7 +20,6 @@ const sequelize = new Sequelize({
     idle: 10000 // The maximum time, in milliseconds, that a connection can be idle before being released
   }
 });
-
 // Test the connection
 sequelize
   .authenticate()

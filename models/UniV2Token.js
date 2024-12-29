@@ -1,7 +1,10 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+import { Model, Sequelize } from 'sequelize';
 
-class UniV2Token extends Model {}
+export default (sequelize, DataTypes) => {
+  class UniV2Token extends Model {
+    static associate(models) {
+    }
+  }
 
 UniV2Token.init(
   {
@@ -10,10 +13,13 @@ UniV2Token.init(
       autoIncrement: true,
       primaryKey: true,
     },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     symbol: {
       type: DataTypes.STRING,
-      primaryKey: true,
-      allowNull: false,
+      allowNull: true,
     },
     category: {
       type: DataTypes.STRING,
@@ -36,17 +42,12 @@ UniV2Token.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    url: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
+  }, {
     sequelize,
-    modelName: 'V2Token',
-    tableName: 'v2_tokens',
+    tableName: 'uni_v2_tokens',
+    modelName: 'UniV2Token',
     timestamps: true,
-  }
-);
+  });
 
-export default UniV2Token;
+  return UniV2Token;
+};

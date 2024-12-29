@@ -57,7 +57,13 @@ export default async function getRaydiumPrice(pair) {
         };
 
         // Upsert token data (insert or update if exists)
-        await upsertRaydiumToken(tokenData);
+
+        try {
+            await upsertRaydiumToken(tokenData);
+        } catch (error) {
+            console.log('Error updating database',error)
+        }
+  
 
     } catch (error) {
         console.error('Error fetching price:', error);

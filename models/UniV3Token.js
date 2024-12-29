@@ -1,9 +1,13 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+import { Model } from 'sequelize';
 
-class UniV3Price extends Model {}
+export default (sequelize, DataTypes) => {
+  class UniV3Token extends Model {
+    static associate(models) {
+    }
+  }
 
-UniV3Price.init(
+
+UniV3Token.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -14,6 +18,10 @@ UniV3Price.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     category: {
       type: DataTypes.STRING,
@@ -47,9 +55,11 @@ UniV3Price.init(
   },
   {
     sequelize,
-    tableName: 'v3_token',
+    tableName: 'uni_v3_tokens',
+    modelName: 'UniV3Token',
     timestamps: true,
   }
 );
 
-export default UniV3Price;
+  return UniV3Token;
+};
