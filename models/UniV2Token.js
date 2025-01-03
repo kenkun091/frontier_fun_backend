@@ -34,9 +34,17 @@ UniV2Token.init(
       allowNull: false,
       unique: true,
     },
+    price: {
+      type: DataTypes.DECIMAL(38,18),
+      allowNull: true,
+    },
     priceUnit: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     type: {
       type: DataTypes.STRING,

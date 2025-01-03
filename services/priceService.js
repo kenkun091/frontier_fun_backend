@@ -3,6 +3,8 @@ import getRaydiumPrice from '../scripts/getRaydiumPrice.js';
 import getUniV2Price from '../scripts/getUniV2Price.js';
 import getUniV3Price from '../scripts/getUniV3Price.js';
 import getAeroPrice from '../scripts/getAeroPrice.js';
+import getUSDtotal from '../scripts/getUsdData.js';
+import getETFData from '../scripts/getETFData.js';
 
 class PriceService {
     constructor() {
@@ -19,9 +21,13 @@ class PriceService {
 
             // Start timers for each token
             raydiumTokens.forEach(token => this.startRaydiumPriceTimer(token.address));
-            uniV2Tokens.forEach(token => this.startUniV2PriceTimer(token.address));
-            uniV3Tokens.forEach(token => this.startUniV3PriceTimer(token.address));
-            aeroTokens.forEach(token => this.startAeroPriceTimer(token.address));
+            // uniV2Tokens.forEach(token => this.startUniV2PriceTimer(token.address));
+            // uniV3Tokens.forEach(token => this.startUniV3PriceTimer(token.address));
+            // aeroTokens.forEach(token => this.startAeroPriceTimer(token.address));
+
+            // Fetch ETF data and USD total
+            await this.fetchETFData();
+            await this.fetchUSDtotal();
 
             console.log('[PriceService] All price update timers initialized');
         } catch (error) {
@@ -38,32 +44,32 @@ class PriceService {
         this.timers.set(key, timer);
     }
 
-    startUniV2PriceTimer(pair) {
-        const key = `uniV2_${pair}`;
-        if (this.timers.has(key)) return;
+    // startUniV2PriceTimer(pair) {
+    //     const key = `uniV2_${pair}`;
+    //     if (this.timers.has(key)) return;
 
-        this.fetchUniV2Price(pair);
-        const timer = setInterval(() => this.fetchUniV2Price(pair), 60000);
-        this.timers.set(key, timer);
-    }
+    //     this.fetchUniV2Price(pair);
+    //     const timer = setInterval(() => this.fetchUniV2Price(pair), 60000);
+    //     this.timers.set(key, timer);
+    // }
 
-    startUniV3PriceTimer(pair) {
-        const key = `uniV3_${pair}`;
-        if (this.timers.has(key)) return;
+    // startUniV3PriceTimer(pair) {
+    //     const key = `uniV3_${pair}`;
+    //     if (this.timers.has(key)) return;
 
-        this.fetchUniV3Price(pair);
-        const timer = setInterval(() => this.fetchUniV3Price(pair), 60000);
-        this.timers.set(key, timer);
-    }
+    //     this.fetchUniV3Price(pair);
+    //     const timer = setInterval(() => this.fetchUniV3Price(pair), 60000);
+    //     this.timers.set(key, timer);
+    // }
 
-    startAeroPriceTimer(pair) {
-        const key = `aero_${pair}`;
-        if (this.timers.has(key)) return;
+    // startAeroPriceTimer(pair) {
+    //     const key = `aero_${pair}`;
+    //     if (this.timers.has(key)) return;
 
-        this.fetchAeroPrice(pair);
-        const timer = setInterval(() => this.fetchAeroPrice(pair), 60000);
-        this.timers.set(key, timer);
-    }
+    //     this.fetchAeroPrice(pair);
+    //     const timer = setInterval(() => this.fetchAeroPrice(pair), 60000);
+    //     this.timers.set(key, timer);
+    // }
 
     async fetchRaydiumPrice(pair) {
         try {
@@ -78,44 +84,62 @@ class PriceService {
         }
     }
 
-    async fetchUniV2Price(pair) {
-        try {
-            const result = await getUniV2Price(pair);
-            await db.UniV2Token.update(
-                { price: result.price, updatedAt: new Date() },
-                { where: { address: pair } }
-            );
-            console.log(`[${new Date().toISOString()}] Updated UniV2 price for ${pair}`);
-        } catch (error) {
-            console.error(`[${new Date().toISOString()}] Error updating UniV2 price for ${pair}:`, error);
-        }
-    }
+    // async fetchUniV2Price(pair) {
+    //     try {
+    //         const result = await getUniV2Price(pair);
+    //         await db.UniV2Token.update(
+    //             { price: result.price, updatedAt: new Date() },
+    //             { where: { address: pair } }
+    //         );
+    //         console.log(`[${new Date().toISOString()}] Updated UniV2 price for ${pair}`);
+    //     } catch (error) {
+    //         console.error(`[${new Date().toISOString()}] Error updating UniV2 price for ${pair}:`, error);
+    //     }
+    // }
 
-    async fetchUniV3Price(pair) {
-        try {
-            const result = await getUniV3Price(pair);
-            await db.UniV3Token.update(
-                { price: result.price, updatedAt: new Date() },
-                { where: { address: pair } }
-            );
-            console.log(`[${new Date().toISOString()}] Updated UniV3 price for ${pair}`);
-        } catch (error) {
-            console.error(`[${new Date().toISOString()}] Error updating UniV3 price for ${pair}:`, error);
-        }
-    }
+    // async fetchUniV3Price(pair) {
+    //     try {
+    //         const result = await getUniV3Price(pair);
+    //         await db.UniV3Token.update(
+    //             { price: result.price, updatedAt: new Date() },
+    //             { where: { address: pair } }
+    //         );
+    //         console.log(`[${new Date().toISOString()}] Updated UniV3 price for ${pair}`);
+    //     } catch (error) {
+    //         console.error(`[${new Date().toISOString()}] Error updating UniV3 price for ${pair}:`, error);
+    //     }
+    // }
 
-    async fetchAeroPrice(pair) {
-        try {
-            const result = await getAeroPrice(pair);
-            await db.AeroToken.update(
-                { price: result.price, updatedAt: new Date() },
-                { where: { address: pair } }
-            );
-            console.log(`[${new Date().toISOString()}] Updated Aero price for ${pair}`);
-        } catch (error) {
-            console.error(`[${new Date().toISOString()}] Error updating Aero price for ${pair}:`, error);
-        }
-    }
+    // async fetchAeroPrice(pair) {
+    //     try {
+    //         const result = await getAeroPrice(pair);
+    //         await db.AeroToken.update(
+    //             { price: result.price, updatedAt: new Date() },
+    //             { where: { address: pair } }
+    //         );
+    //         console.log(`[${new Date().toISOString()}] Updated Aero price for ${pair}`);
+    //     } catch (error) {
+    //         console.error(`[${new Date().toISOString()}] Error updating Aero price for ${pair}:`, error);
+    //     }
+    // }
+
+    // async fetchETFData() {
+    //     try {
+    //         const result = await getETFData();
+    //         console.log(`[${new Date().toISOString()}] Fetched ETF data:`, result);
+    //     } catch (error) {
+    //         console.error(`[${new Date().toISOString()}] Error fetching ETF data:`, error);
+    //     }
+    // }
+
+    // async fetchUSDtotal() {
+    //     try {
+    //         const result = await getUSDtotal();
+    //         console.log(`[${new Date().toISOString()}] Fetched USD total:`, result);
+    //     } catch (error) {
+    //         console.error(`[${new Date().toISOString()}] Error fetching USD total:`, error);
+    //     }
+    // }
 
     stopTimer(pair) {
         const timer = this.timers.get(pair);

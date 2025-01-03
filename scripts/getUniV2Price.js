@@ -1,18 +1,16 @@
 import { ChainId, Token } from '@uniswap/sdk-core';
 import { Pair } from '@uniswap/v2-sdk';
 import { ethers, formatUnits } from "ethers";
-import uniswapV2poolABI from '../config/uniswapV2poolABI'; 
-import { provider } from '../config/rpcProvider';
+import uniswapV2poolABI from '../config/uniswapV2poolABI.js'; 
+import { provider } from '../config/rpcProvider.js';
 
 // import UniV2Token from '../models/UniV2Token';
 import db from '../models/index.js';
 
-export default async function getUniV2Price(chain, token0, token1) {
+export default async function getUniV2Price(pairAddress) {
 
     try {
-        const Token0 = new Token(ChainId.MAINNET, token0, 18);
-        const Token1 = new Token(ChainId.MAINNET, token1, 18);
-        const pairAddress = Pair.getAddress(Token0, Token1);
+  
         const pairContract = new ethers.Contract(pairAddress, uniswapV2poolABI, await provider(chain));
         const reserves = await pairContract["getReserves"]();
         const [reserveRaw0, reserveRaw1] = reserves;
@@ -27,13 +25,9 @@ export default async function getUniV2Price(chain, token0, token1) {
         }
         const price = reserve0 / reserve1;
         const tokenData =  {
-            symbol: token0,
-            chain: chain,
             address: pairAddress,
-            priceUnit: 'USD',
             price: price 
         };
-
 
         // Upsert token data (insert or update if exists)
         await upsertUniV2Token(tokenData);

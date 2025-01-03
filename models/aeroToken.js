@@ -43,6 +43,10 @@ AeroToken.init(
         },
       },
     },
+    price: {
+      type: DataTypes.DECIMAL(38,18),
+      allowNull: true,
+    },
     type: {
       type: DataTypes.STRING,
       allowNull: false,

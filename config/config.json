@@ -2,9 +2,10 @@
   "development": {
     "username": "admin",
     "password": "admin1234",
-    "database": "tokens_db",
+    "database":"frontier-fun-tokens-db-dev",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "port": "5432"
   },
   "local": {
     "username": "admin",

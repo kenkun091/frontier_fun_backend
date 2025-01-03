@@ -1,5 +1,5 @@
 import axios from 'axios';
-import RaydiumToken from '../models/RaydiumToken.js';
+// import RaydiumToken from '../models/RaydiumToken.js';
 import db from '../models/index.js';
 
 async function getTokenSupply(token) {
@@ -50,9 +50,7 @@ export default async function getRaydiumPrice(pair) {
         // Prepare token data for database
         tokenData = {
             symbol: tokenInfo.mintB.symbol || 'UNKNOWN',
-            category: 'Raydium',
             address: tokenAddress,
-            type: 'Solana Token',
             url: `https://solscan.io/token/${tokenAddress}`
         };
 

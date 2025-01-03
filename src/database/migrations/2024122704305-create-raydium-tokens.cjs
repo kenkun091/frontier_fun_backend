@@ -3,49 +3,46 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('uni_v3_tokens', {
+    await queryInterface.createTable('raydium_tokens', {
       id: {
         type: Sequelize.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
-      },
-      chain: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      category: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      address: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        autoIncrement: true,
       },
       symbol: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      priceUnit: {
+      category: {
         type: Sequelize.STRING,
+        allowNull: true,
+      },
+      address: {
+        type: Sequelize.STRING,
+        unique: true,
         allowNull: false,
       },
       type: {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      price: {
+        type: Sequelize.DECIMAL(38,18),
+        allowNull: true,
+      },
+      url: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       createdAt: {
         type: Sequelize.DATE,
+        field: 'created_at',
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
         type: Sequelize.DATE,
+        field: 'updated_at',
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
@@ -53,6 +50,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('uni_v3_tokens');
+    await queryInterface.dropTable('raydium_tokens');
   }
 };

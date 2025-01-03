@@ -77,25 +77,31 @@ npx sequelize-cli migration:generate --name create-your-table-name
 ### 6. Running Migrations
 Run the migrations to create tables in your database:
 ```bash
-NODE_ENV=development npx sequelize-cli db:migrate
+NODE_ENV=local npx sequelize-cli db:migrate
 ```
 
 ### 7. Verify Migration Status
 To check the status of your migrations:
 ```bash
-NODE_ENV=development npx sequelize-cli db:migrate:status
+NODE_ENV=local npx sequelize-cli db:migrate:status
 ```
 
 ### 8. Undo Last Migration (if needed)
 If you need to undo the last migration:
 ```bash
-NODE_ENV=development npx sequelize-cli db:migrate:undo
+NODE_ENV=local npx sequelize-cli db:migrate:undo
 ```
 
 ### 9. Undo All Migrations (if needed)
 To undo all migrations:
 ```bash
-NODE_ENV=development npx sequelize-cli db:migrate:undo:all
+NODE_ENV=local npx sequelize-cli db:migrate:undo:all
+```
+
+### 9. SEED All Tables (if needed)
+To seed all migrations:
+```bash
+NODE_ENV=local npx sequelize-cli db:seed:all
 ```
 
 ### Additional Notes

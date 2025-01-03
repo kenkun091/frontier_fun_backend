@@ -9,24 +9,24 @@ const calculatePrice = (sqrtPriceX96) => {
     return Number(numerator) / Number(denominator);
 };
 
-export default async function getUniV3Price(chain, token0, token1, fee) {
-    let poolAddress;
-    if (!poolAddress) try {
-        let factoryAddress = "";
-        if (chain == "ETH") {
-            factoryAddress = "0x1F98431c8aD98523631AE4a59f267346ea31F984";
-        } else if (chain == "BASE") {
-            factoryAddress = "0x33128a8fC17869897dcE68Ed026d694621f6FDfD";
-        }
-        const factoryABI = [
-            "function getPool(address tokenA, address tokenB, uint24 fee) external view returns (address)"
-        ];
-        // construct Uni V3 factory contract
-        const factoryContract = new ethers.Contract(factoryAddress, factoryABI, await provider(chain));
-        poolAddress = await factoryContract.getPool(token0, token1, fee);
-    } catch (error) {
-        console.error('Error', error);
-    }
+export default async function getUniV3Price(poolAddress) {
+    // let poolAddress;
+    // if (!poolAddress) try {
+    //     let factoryAddress = "";
+    //     if (chain == "ETH") {
+    //         factoryAddress = "0x1F98431c8aD98523631AE4a59f267346ea31F984";
+    //     } else if (chain == "BASE") {
+    //         factoryAddress = "0x33128a8fC17869897dcE68Ed026d694621f6FDfD";
+    //     }
+    //     const factoryABI = [
+    //         "function getPool(address tokenA, address tokenB, uint24 fee) external view returns (address)"
+    //     ];
+    //     // construct Uni V3 factory contract
+    //     const factoryContract = new ethers.Contract(factoryAddress, factoryABI, await provider(chain));
+    //     poolAddress = await factoryContract.getPool(token0, token1, fee);
+    // } catch (error) {
+    //     console.error('Error', error);
+    // }
     // construct pool contract
     const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI.abi, await provider(chain));
     // invoke slot0() to get sqrtPriceX96
@@ -36,12 +36,26 @@ export default async function getUniV3Price(chain, token0, token1, fee) {
     new Promise(resolve => setTimeout(resolve, 10000));
 
     try {
-        await db.uniV3Prices.create({
-            tokenAddress: token1.address,
-            poolAddress: poolAddress,
-            price: price.toString(),
-            timestamp: new Date()
+
+        const tokenData =  {
+            address: poolAddress,
+            price: price 
+        };
+
+        const [token, created] = await db.UniV3Token.findOrCreate({
+            where: { address: tokenData.address },
+            defaults: tokenData
         });
+
+        if (!created) {
+            // If the token already exists, update it
+            await token.update(tokenData);
+        }
+
+        // await db.uniV3Prices.findOrCreate({
+        //     address: poolAddress,
+        //     price: price.toString(),
+        // });
         console.log(`Price saved to database: ${price}`);
     } catch (error) {
         console.error('Error getting or saving price:', error);

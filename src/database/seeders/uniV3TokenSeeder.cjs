@@ -1,10 +1,9 @@
-import db from '../../../models/index.js';
-
+// src/database/seeders/uniV3TokenSeeder.cjs
 // feeRate
-export const FEE_RATE_MEDIUM = 3000;
-export const FEE_RATE_LARGE = 10000;
+const FEE_RATE_MEDIUM = 3000;
+const FEE_RATE_LARGE = 10000;
 
-export const v3tokens = {
+const v3tokens = {
     PSY: {
         category: "BIO",
         chain: "ETH",
@@ -112,27 +111,36 @@ export const v3tokens = {
         address: "0xa19f5264f7d7be11c451c093d8f92592820bea86",
         priceUnit: "ETH",
         type: "AI meme",
-        url: "",
+        url: "-",
         poolFee: FEE_RATE_LARGE
     },
 };
 
-async function seedUniV3Tokens() {
-    try {
-        // Clear existing records
-        await db.UniV3Token.destroy({ where: {} });
+module.exports = {
+    up: async (queryInterface, Sequelize) => {
+        try {
+            // Dynamically import the db module
+            const db = await import('../../../models/index.js');
 
-        // Insert new records
-        const tokensArray = Object.entries(v3tokens).map(([key, value]) => ({
-            name: key,
-            ...value
-        }));
-        await db.UniV3Token.bulkCreate(tokensArray);
+            // Clear existing records
+            await db.default.UniV3Token.destroy({ where: {} });
 
-        console.log('UniV3Tokens seeded successfully');
-    } catch (error) {
-        console.error('Error seeding UniV3Tokens:', error);
+            // Insert new records
+            const tokensArray = Object.entries(v3tokens).map(([key, value]) => ({
+                name: key,
+                ...value
+            }));
+            await db.default.UniV3Token.bulkCreate(tokensArray);
+
+            console.log('UniV3Tokens seeded successfully');
+        } catch (error) {
+            console.error('Error seeding UniV3Tokens:', error);
+        }
+    },
+
+    down: async (queryInterface, Sequelize) => {
+        // Optionally, you can define how to undo the seeding
+        const db = await import('../../../models/index.js');
+        await db.default.UniV3Token.destroy({ where: {} });
     }
-}
-
-export { seedUniV3Tokens }; 
+};

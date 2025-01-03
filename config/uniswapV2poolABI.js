@@ -32,5 +32,5 @@ const uniswapV2poolABI = [
       "type": "function"
     }
 ];
-  
-module.exports = uniswapV2poolABI;
+
+export default uniswapV2poolABI;

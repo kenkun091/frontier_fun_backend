@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Import config directly
-import config from '../config/config.json' assert { type: "json" };
+import config from '../config/config.cjs';
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'local';

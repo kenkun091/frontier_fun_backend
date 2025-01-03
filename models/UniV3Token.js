@@ -17,7 +17,6 @@ UniV3Token.init(
     symbol: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     name: {
       type: DataTypes.STRING,
@@ -36,6 +35,10 @@ UniV3Token.init(
       allowNull: false,
       unique: true,
     },
+    price: {
+      type: DataTypes.DECIMAL(38,18),
+      allowNull: true,
+    },
     priceUnit: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -50,7 +53,7 @@ UniV3Token.init(
     },
     poolFee: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {

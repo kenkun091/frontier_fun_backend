@@ -27,6 +27,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
+    price: {
+      type: DataTypes.DECIMAL(38,18),
+      allowNull: true,
+    },
     url: {
       type: DataTypes.STRING,
       allowNull: true

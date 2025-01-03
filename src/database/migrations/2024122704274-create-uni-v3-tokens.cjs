@@ -3,26 +3,18 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('aero_tokens', {
+    await queryInterface.createTable('uni_v3_tokens', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      category: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      type: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      url: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
       chain: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      category: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -39,6 +31,26 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      price: {
+        type: Sequelize.DECIMAL(38,18),
+        allowNull: true,
+      },
+      priceUnit: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      type: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      url: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      poolFee: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -53,6 +65,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('aero_tokens');
+    await queryInterface.dropTable('uni_v3_tokens');
   }
 };
