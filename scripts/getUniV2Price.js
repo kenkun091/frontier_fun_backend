@@ -3,14 +3,16 @@ import { Pair } from '@uniswap/v2-sdk';
 import { ethers, formatUnits } from "ethers";
 import uniswapV2poolABI from '../config/uniswapV2poolABI.js'; 
 import { provider } from '../config/rpcProvider.js';
-
-// import UniV2Token from '../models/UniV2Token';
 import db from '../models/index.js';
 
-export default async function getUniV2Price(pairAddress) {
+export default async function getUniV2Price(chain, token0, priceUnit) {
 
     try {
-  
+        const token1 = getToken1Address(chain, priceUnit);
+        const Token0 = new Token(ChainId.MAINNET, token0, 18);
+        const Token1 = new Token(ChainId.MAINNET, token1, 18);
+
+        const pairAddress = Pair.getAddress(Token0, Token1);
         const pairContract = new ethers.Contract(pairAddress, uniswapV2poolABI, await provider(chain));
         const reserves = await pairContract["getReserves"]();
         const [reserveRaw0, reserveRaw1] = reserves;
@@ -24,13 +26,12 @@ export default async function getUniV2Price(pairAddress) {
             reserve1 = formatUnits(reserveRaw0, 18);
         }
         const price = reserve0 / reserve1;
-        const tokenData =  {
-            address: pairAddress,
-            price: price 
-        };
+        await db.UniV2Token.update(
+            { price: price }, 
+            { where: { address: token0 } } 
+        );
+        // return price;
 
-        // Upsert token data (insert or update if exists)
-        await upsertUniV2Token(tokenData);
     } catch (error) {
         console.error('Error getting price data', error);
         throw error;
@@ -38,22 +39,12 @@ export default async function getUniV2Price(pairAddress) {
     
 }
 
-async function upsertUniV2Token(tokenData) {
-    try {
-        const [token, created] = await db.UniV2Token.findOrCreate({
-            where: { address: tokenData.address },
-            defaults: tokenData
-        });
-
-        if (!created) {
-            // If the token already exists, update it
-            await token.update(tokenData);
-        }
-
-        console.log('Upserted Token:', token);
-        return token;
-    } catch (error) {
-        console.error('Error upserting UniV2 token:', error);
-        throw error;
-    }
+function getToken1Address(chain, priceUnit){
+    if (chain == "ETH" && priceUnit =="ETH")
+        return "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+    else if (chain == "BASE" && priceUnit == "ETH") 
+        return "0x4200000000000000000000000000000000000006";
+    else if (chain == "BASE" && priceUnit == "USDC") 
+        return "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+    return "";
 }

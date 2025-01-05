@@ -9,59 +9,52 @@ const calculatePrice = (sqrtPriceX96) => {
     return Number(numerator) / Number(denominator);
 };
 
-export default async function getUniV3Price(poolAddress) {
-    // let poolAddress;
-    // if (!poolAddress) try {
-    //     let factoryAddress = "";
-    //     if (chain == "ETH") {
-    //         factoryAddress = "0x1F98431c8aD98523631AE4a59f267346ea31F984";
-    //     } else if (chain == "BASE") {
-    //         factoryAddress = "0x33128a8fC17869897dcE68Ed026d694621f6FDfD";
-    //     }
-    //     const factoryABI = [
-    //         "function getPool(address tokenA, address tokenB, uint24 fee) external view returns (address)"
-    //     ];
-    //     // construct Uni V3 factory contract
-    //     const factoryContract = new ethers.Contract(factoryAddress, factoryABI, await provider(chain));
-    //     poolAddress = await factoryContract.getPool(token0, token1, fee);
-    // } catch (error) {
-    //     console.error('Error', error);
-    // }
+const factoryABI = [
+    "function getPool(address tokenA, address tokenB, uint24 fee) external view returns (address)"
+];
+
+export default async function getUniV3Price(chain, token0, fee, priceUnit) {
+
+    const factoryAddress = getFactoryAddress(chain);
+    const token1 = getToken1Address(chain, priceUnit);
+
+    // construct Uni V3 factory contract
+    const factoryContract = new ethers.Contract(factoryAddress, factoryABI, await provider(chain));
+    const poolAddress = await factoryContract.getPool(token0, token1, fee);
+
     // construct pool contract
     const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI.abi, await provider(chain));
     // invoke slot0() to get sqrtPriceX96
     const { sqrtPriceX96 } = await poolContract.slot0();
     // calculatePrice
     const price = calculatePrice(sqrtPriceX96);
+
     new Promise(resolve => setTimeout(resolve, 10000));
 
-    try {
+    // await db.UniV3Token.update(
+    //     { price: price }, 
+    //     { where: { address: token0 } } 
+    // );
+    return price;
 
-        const tokenData =  {
-            address: poolAddress,
-            price: price 
-        };
+}
 
-        const [token, created] = await db.UniV3Token.findOrCreate({
-            where: { address: tokenData.address },
-            defaults: tokenData
-        });
-
-        if (!created) {
-            // If the token already exists, update it
-            await token.update(tokenData);
-        }
-
-        // await db.uniV3Prices.findOrCreate({
-        //     address: poolAddress,
-        //     price: price.toString(),
-        // });
-        console.log(`Price saved to database: ${price}`);
-    } catch (error) {
-        console.error('Error getting or saving price:', error);
-        throw error;
+function getFactoryAddress(chain){
+    if (chain == "ETH") {
+        return "0x1F98431c8aD98523631AE4a59f267346ea31F984";
+    } else if (chain == "BASE") {
+        return "0x33128a8fC17869897dcE68Ed026d694621f6FDfD";
+    } else {
+        return ""
     }
+}
 
-    // return price;
-
+function getToken1Address(chain, priceUnit){
+    if (chain == "ETH" && priceUnit =="ETH")
+        return "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+    else if (chain == "BASE" && priceUnit == "ETH") 
+        return "0x4200000000000000000000000000000000000006";
+    else if (chain == "BASE" && priceUnit == "USDC") 
+        return "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+    return "";
 }

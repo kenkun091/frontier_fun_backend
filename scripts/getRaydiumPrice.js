@@ -1,5 +1,4 @@
 import axios from 'axios';
-// import RaydiumToken from '../models/RaydiumToken.js';
 import db from '../models/index.js';
 
 async function getTokenSupply(token) {
@@ -54,15 +53,12 @@ export default async function getRaydiumPrice(pair) {
             url: `https://solscan.io/token/${tokenAddress}`
         };
 
-        // Upsert token data (insert or update if exists)
-
-        try {
-            await upsertRaydiumToken(tokenData);
-        } catch (error) {
-            console.log('Error updating database',error)
-        }
+        // try {
+        //     await upsertRaydiumToken(tokenData);
+        // } catch (error) {
+        //     console.log('Error updating database',error)
+        // }
   
-
     } catch (error) {
         console.error('Error fetching price:', error);
     }

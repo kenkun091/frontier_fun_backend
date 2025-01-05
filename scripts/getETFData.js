@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import puppeteer from 'puppeteer';
-import ETFData from '../models/ETFData.js';
+import db from '../models/index.js';
 
 async function getETFData() {
   try {
@@ -44,14 +44,14 @@ async function getETFData() {
 
     // Save data to the ETFData table
     for (const data of ethData) {
-      await ETFData.create({
+      await db.ETFData.create({
         date: data.date,
         netFlow: data.netFlow,
       });
     }
 
     await browser.close();
-    return ethData;
+    // return ethData;
 
   } catch (error) {
     console.error('ERROR retrieving ETF data:', error);

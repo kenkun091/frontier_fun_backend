@@ -15,7 +15,7 @@ UniV2Token.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     symbol: {
       type: DataTypes.STRING,

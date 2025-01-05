@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import axios from 'axios';
-import UsdData from '../models/USDData.js'; // Import the UsdData model
+import db from '../models/index.js';
 
 async function getUSDtotal() {
   
@@ -25,21 +25,21 @@ async function getUSDtotal() {
       const usdc = cryptoData.find((crypto) => crypto.symbol === 'USDC');
       const usdt_market_cap = usdt?.quote.USD.market_cap || 0;
       const usdc_market_cap = usdc?.quote.USD.market_cap || 0;
-      console.log(usdt);
-      console.log(usdc);
+      // console.log(usdt);
+      // console.log(usdc);
 
       // Save data to the database
-      await UsdData.create({
+      await db.UsdData.create({
         symbol: 'USDT',
         market_cap: usdt_market_cap,
       });
 
-      await UsdData.create({
+      await db.UsdData.create({
         symbol: 'USDC',
         market_cap: usdc_market_cap,
       });
 
-      return usdt_market_cap + usdc_market_cap;
+      // return usdt_market_cap + usdc_market_cap;
   } 
 
   return 0;
