@@ -1,7 +1,4 @@
 // models/Project.js
-// const { Model, DataTypes } = require('sequelize');
-// const sequelize = require('../config/database');
-
 import { Model } from 'sequelize';
 
 export default (sequelize, DataTypes) => {

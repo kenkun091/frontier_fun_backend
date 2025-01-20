@@ -1,18 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+
+
 import priceService from './services/priceService.js';
 
-// import { seedProjects } from './src/database/seeders/projectSeeder.cjs';
-// import { seedAeroTokens } from './src/database/seeders/aeroTokenSeeder.cjs';
-// import { seedRaydiumTokens } from './src/database/seeders/raydiumTokenSeeder.cjs';
-// import { seedUniV2Tokens } from './src/database/seeders/uniV2TokenSeeder.cjs';
-// import { seedUniV3Tokens } from './src/database/seeders/uniV3TokenSeeder.cjs';
-
-// await seedProjects();
-// await seedAeroTokens();
-// await seedRaydiumTokens();
-// await seedUniV2Tokens();
-// await seedUniV3Tokens();
+import aeroTokenRoute from './routes/aeroToken.js';
+import raydiumTokenRoute from './routes/raydiumToken.js';
+import projectsRoute from './routes/tokenProjects.js';
 
 const app = express();
 
@@ -26,6 +20,10 @@ app.get('/', (req, res) => {
 });
 
 priceService.initializeAllPriceUpdates();
+
+app.use('/api/aeroToken', aeroTokenRoute);
+app.use('/api/raydiumToken', raydiumTokenRoute);
+app.use('/api/projects', projectsRoute);
 
 // Set port and start server
 const PORT = process.env.PORT || 3000;
