@@ -15,6 +15,9 @@ export default async function getUniV2Price(chain, token0, priceUnit) {
         const pairAddress = Pair.getAddress(Token0, Token1);
         const pairContract = new ethers.Contract(pairAddress, uniswapV2poolABI, await provider(chain));
         const reserves = await pairContract["getReserves"]();
+        const totalSupply = await pairContract.totalSupply();
+ 
+
         const [reserveRaw0, reserveRaw1] = reserves;
         let reserve0 = 0;
         let reserve1 = 1;
@@ -27,7 +30,10 @@ export default async function getUniV2Price(chain, token0, priceUnit) {
         }
         const price = reserve0 / reserve1;
         await db.UniV2Token.update(
-            { price: price }, 
+            { 
+                price: price,
+                totalSupply: totalSupply
+            }, 
             { where: { address: token0 } } 
         );
         // return price;

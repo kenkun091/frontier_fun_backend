@@ -53,6 +53,14 @@ export default async function getRaydiumPrice(pair) {
             url: `https://solscan.io/token/${tokenAddress}`
         };
 
+
+        await db.RaydiumToken.update(
+            { 
+                price: price,
+                totalSupply: tokenSupply
+            }, 
+            { where: { address: tokenAddress } } 
+        );
         // try {
         //     await upsertRaydiumToken(tokenData);
         // } catch (error) {

@@ -93,12 +93,18 @@ class PriceService {
 
     async fetchRaydiumPrice(address) {
         try {
-            const result = await getRaydiumPrice(address);
 
-            await db.RaydiumToken.update(
-                { price: result.price, updatedAt: new Date() },
-                { where: { address: address } }
-            );
+            await getRaydiumPrice(address);
+            // const result = await getRaydiumPrice(address);
+
+            // await db.RaydiumToken.update(
+            //     { 
+            //         price: result.price, 
+            //         updatedAt: new Date(), 
+            //         totalSupply: result.tokenSupply
+            //      },
+            //     { where: { address: address } }
+            // );
             console.log(`[${new Date().toISOString()}] Updated Raydium price for ${address}`);
         } catch (error) {
             console.error(`[${new Date().toISOString()}] Error updating Raydium price for ${address}:`, error);
@@ -122,12 +128,12 @@ class PriceService {
     async fetchUniV3Price(chain, address, fee, priceUnit) {
 
         try {
-            const price = await getUniV3Price(chain, address, fee, priceUnit);
+            await getUniV3Price(chain, address, fee, priceUnit);
      
-            await db.UniV3Token.update(
-                { price: price }, 
-                { where: { address: address } } 
-            );
+            // await db.UniV3Token.update(
+            //     { price: price }, 
+            //     { where: { address: address } } 
+            // );
 
             console.log(`[${new Date().toISOString()}] Updated UniV3 price for ${address}`);
         } catch (error) {

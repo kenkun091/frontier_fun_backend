@@ -39,6 +39,10 @@ UniV3Token.init(
       type: DataTypes.DECIMAL(38,18),
       allowNull: true,
     },
+    totalSupply: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     priceUnit: {
       type: DataTypes.STRING,
       allowNull: false,

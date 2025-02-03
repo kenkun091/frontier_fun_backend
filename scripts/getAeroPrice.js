@@ -17,7 +17,8 @@ async function getAeroPrice(chain, token0) {
         const pairContract = new ethers.Contract(pairAddress, uniswapV2poolABI, await provider(chain));
     
         const reserves = await pairContract.getReserves();
-
+        const totalSupply = await pairContract.totalSupply();
+ 
         const [reserveRaw0, reserveRaw1] = reserves;
         let reserve0 = 0;
         let reserve1 = 1;
@@ -32,12 +33,17 @@ async function getAeroPrice(chain, token0) {
         }
         const price = reserve0 / reserve1;
         // return price;
+
         await db.AeroToken.update(
-            {price:price},
+            {
+                price:price,
+                totalSupply: totalSupply
+            },
+ 
             {where:{address: token0}}
         );
     } catch(err){
-        console.log(err);
+        console.log('Error updating AeroToken:', err);
     }
     
 }

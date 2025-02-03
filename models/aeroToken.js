@@ -47,6 +47,10 @@ AeroToken.init(
       type: DataTypes.DECIMAL(38,18),
       allowNull: true,
     },
+    totalSupply:{
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     type: {
       type: DataTypes.STRING,
       allowNull: false,

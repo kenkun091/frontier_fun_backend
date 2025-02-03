@@ -38,6 +38,10 @@ UniV2Token.init(
       type: DataTypes.DECIMAL(38,18),
       allowNull: true,
     },
+    totalSupply:{
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     priceUnit: {
       type: DataTypes.STRING,
       allowNull: false,

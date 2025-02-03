@@ -31,6 +31,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(38,18),
       allowNull: true,
     },
+    totalSupply: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     url: {
       type: DataTypes.STRING,
       allowNull: true
