@@ -3,7 +3,7 @@ import db from '../models/index.js'; // Adjust the path as necessary
 
 const router = express.Router();
 
-// GET /api/aeroPrice
+// GET /api/aeroToken
 router.get('/', async (req, res) => {
     const { addr } = req.query; // Get the pair (token address) from the query parameters
 

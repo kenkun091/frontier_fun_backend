@@ -41,6 +41,9 @@ export default async function getRaydiumPrice(pair) {
         // Extract token information
         const tokenInfo = pool.data[0];
         price = tokenInfo.price;
+
+        console.log(pair)
+        console.log(tokenInfo)
         
         // Get total supply
         const tokenAddress = tokenInfo.mintB.address;
