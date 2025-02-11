@@ -93,18 +93,19 @@ class PriceService {
 
     async fetchRaydiumPrice(address) {
         try {
+            const {price: tokenPriceSOL, tokenSupply, tokenData} =  await getRaydiumPrice(address);
+            const { price: priceSOLUSDC } = await getRaydiumPrice("8sLbNZoA1cfnvMJLPfp98ZLAnFSYCFApfJKMbiXNLwxj");
+            const price = priceSOLUSDC / tokenPriceSOL;
 
-            await getRaydiumPrice(address);
-            // const result = await getRaydiumPrice(address);
+            await db.RaydiumToken.update(
+                { 
+                    price: price.toFixed(6), 
+                    updatedAt: new Date(), 
+                    totalSupply: tokenSupply
+                 },
+                { where: { address: address } }
+            );
 
-            // await db.RaydiumToken.update(
-            //     { 
-            //         price: result.price, 
-            //         updatedAt: new Date(), 
-            //         totalSupply: result.tokenSupply
-            //      },
-            //     { where: { address: address } }
-            // );
             console.log(`[${new Date().toISOString()}] Updated Raydium price for ${address}`);
         } catch (error) {
             console.error(`[${new Date().toISOString()}] Error updating Raydium price for ${address}:`, error);

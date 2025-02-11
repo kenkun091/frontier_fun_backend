@@ -34,6 +34,7 @@ export default async function getRaydiumPrice(pair) {
     let tokenSupply = 0;
     let tokenData = null;
 
+
     try {
         const response = await fetch(poolUrl);
         const pool = await response.json();
@@ -42,8 +43,8 @@ export default async function getRaydiumPrice(pair) {
         const tokenInfo = pool.data[0];
         price = tokenInfo.price;
 
-        console.log(pair)
-        console.log(tokenInfo)
+        // console.log(pair)
+        // console.log(tokenInfo)
         
         // Get total supply
         const tokenAddress = tokenInfo.mintB.address;
@@ -56,14 +57,13 @@ export default async function getRaydiumPrice(pair) {
             url: `https://solscan.io/token/${tokenAddress}`
         };
 
-
-        await db.RaydiumToken.update(
-            { 
-                price: price,
-                totalSupply: tokenSupply
-            }, 
-            { where: { address: tokenAddress } } 
-        );
+        // await db.RaydiumToken.update(
+        //     { 
+        //         price: price,
+        //         totalSupply: tokenSupply
+        //     }, 
+        //     { where: { address: tokenAddress } } 
+        // );
         // try {
         //     await upsertRaydiumToken(tokenData);
         // } catch (error) {
@@ -81,22 +81,22 @@ export default async function getRaydiumPrice(pair) {
     };
 }
 
-async function upsertRaydiumToken(tokenData) {
-    try {
-        // Use findOrCreate or upsert depending on your Sequelize version
-        const [token, created] = await db.RaydiumToken.findOrCreate({
-            where: { address: tokenData.address },
-            defaults: tokenData
-        });
+// async function upsertRaydiumToken(tokenData) {
+//     try {
+//         // Use findOrCreate or upsert depending on your Sequelize version
+//         const [token, created] = await db.RaydiumToken.findOrCreate({
+//             where: { address: tokenData.address },
+//             defaults: tokenData
+//         });
 
-        // If not created, update the existing token
-        if (!created) {
-            await token.update(tokenData);
-        }
+//         // If not created, update the existing token
+//         if (!created) {
+//             await token.update(tokenData);
+//         }
 
-        return token;
-    } catch (error) {
-        console.error('Error upserting Raydium token:', error);
-        throw error;
-    }
-}
+//         return token;
+//     } catch (error) {
+//         console.error('Error upserting Raydium token:', error);
+//         throw error;
+//     }
+// }
