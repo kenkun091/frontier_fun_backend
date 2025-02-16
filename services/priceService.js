@@ -5,8 +5,13 @@ import getUniV3Price from '../scripts/getUniV3Price.js';
 import getAeroPrice from '../scripts/getAeroPrice.js';
 import getUSDtotal from '../scripts/getUsdData.js';
 import getETFData from '../scripts/getETFData.js';
+import getErc20Supply from '../scripts/getErc20Supply.js';
+
+import { FEE_RATE_MEDIUM} from '../config/tokenUniV3Config.js';
 
 const fetchInterval = 60000;
+const ETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+const USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
 class PriceService {
     constructor() {
@@ -68,7 +73,7 @@ class PriceService {
         if (this.timers.has(key)) return;
 
         this.fetchAeroPrice(chain, address);
-        const timer = setInterval(() => this.fetchAeroPrice(chain, address), 60000);
+        const timer = setInterval(() => this.fetchAeroPrice(chain, address), fetchInterval);
         this.timers.set(key, timer);
     }
 
@@ -115,11 +120,22 @@ class PriceService {
 
     async fetchUniV2Price(chain, address, priceUnit) {
         try {
-            await getUniV2Price(chain, address, priceUnit);
-            // await db.UniV2Token.update(
-            //     { price: price, updatedAt: new Date() },
-            //     { where: { address:address } }
-            // );
+            const priceETHUSDT = await getUniV3Price("ETH", USDT, FEE_RATE_MEDIUM, "ETH")* Math.pow(10, 12);
+            const tokenPriceRaw = await getUniV2Price(chain, address, priceUnit);
+            let price = 0;
+            if (priceUnit == "ETH")
+                price = priceETHUSDT * tokenPriceRaw;
+            else if (priceUnit == "USDC")
+                price = tokenPriceRaw * Math.pow(10, 12);
+            const tokenSupply =  Number(await getErc20Supply(chain, address));
+            
+        await db.UniV2Token.update(
+            { 
+                price: price,
+                totalSupply: tokenSupply
+            }, 
+            { where: { address: address } } 
+        );
             console.log(`[${new Date().toISOString()}] Updated UniV2 price for ${address}`);
         } catch (error) {
             console.error(`[${new Date().toISOString()}] Error updating UniV2 price for ${address}:`, error);
@@ -129,12 +145,22 @@ class PriceService {
     async fetchUniV3Price(chain, address, fee, priceUnit) {
 
         try {
-            await getUniV3Price(chain, address, fee, priceUnit);
-     
-            // await db.UniV3Token.update(
-            //     { price: price }, 
-            //     { where: { address: address } } 
-            // );
+            const priceETHUSDT = await getUniV3Price("ETH", USDT, FEE_RATE_MEDIUM, "ETH")* Math.pow(10, 12);
+            const tokenPriceRaw = await getUniV3Price(chain, address, fee, priceUnit);
+            
+            let price = 0;
+            if (priceUnit == "ETH")
+                price = priceETHUSDT * tokenPriceRaw;
+            else if (priceUnit == "USDC")
+                price = tokenPriceRaw * Math.pow(10, 12);
+            const tokenSupply = Number(await getErc20Supply(chain, address));
+
+            await db.UniV3Token.update(
+                { price: price,
+                  totalSupply: tokenSupply
+                 }, 
+                { where: { address: address } } 
+            );
 
             console.log(`[${new Date().toISOString()}] Updated UniV3 price for ${address}`);
         } catch (error) {
@@ -144,7 +170,21 @@ class PriceService {
 
     async fetchAeroPrice(chain, address) {
         try {
-            await getAeroPrice(chain, address);
+
+            const priceETHUSDT = await getUniV3Price("ETH", USDT, FEE_RATE_MEDIUM, "ETH")* Math.pow(10, 12);
+            const priceRaw = await getAeroPrice(chain, address);
+            const price = priceETHUSDT * priceRaw;
+            const totalSupply = Number(await getErc20Supply(chain, address));
+
+            await db.AeroToken.update(
+                {
+                    price:price,
+                    totalSupply: totalSupply
+                },
+    
+                {where:{address: address}}
+            );
+
             console.log(`[${new Date().toISOString()}] Updated Aero price for ${address}}`);
         } catch (error) {
             console.error(`[${new Date().toISOString()}] Error updating Aero price for ${address}:`, error);

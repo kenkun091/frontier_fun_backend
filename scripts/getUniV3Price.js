@@ -34,13 +34,13 @@ export default async function getUniV3Price(chain, token0, fee, priceUnit) {
 
     new Promise(resolve => setTimeout(resolve, 10000));
 
-    await db.UniV3Token.update(
-        { price: price ,
-            totalSupply: totalSupply
-        }, 
-        { where: { address: token0 } } 
-    );
-    // return price;
+    // await db.UniV3Token.update(
+    //     { price: price ,
+    //         totalSupply: totalSupply
+    //     }, 
+    //     { where: { address: token0 } } 
+    // );
+    return price;
 
 }
 

@@ -3,7 +3,6 @@ import {ethers, formatUnits} from 'ethers';
 import uniswapV2poolABI from '../config/uniswapV2poolABI.js'; 
 import { provider } from '../config/rpcProvider.js';
 
-
 async function getAeroPrice(chain, token0) {
     try {
         const factoryAddress = "0x420DD381b31aEf6683db6B902084cB0FFECe40Da";
@@ -17,8 +16,7 @@ async function getAeroPrice(chain, token0) {
         const pairContract = new ethers.Contract(pairAddress, uniswapV2poolABI, await provider(chain));
     
         const reserves = await pairContract.getReserves();
-        const totalSupply = await pairContract.totalSupply();
- 
+        
         const [reserveRaw0, reserveRaw1] = reserves;
         let reserve0 = 0;
         let reserve1 = 1;
@@ -32,16 +30,19 @@ async function getAeroPrice(chain, token0) {
             reserve1 = formatUnits(reserveRaw0, 18);
         }
         const price = reserve0 / reserve1;
-        // return price;
+        
+        return price;
 
-        await db.AeroToken.update(
-            {
-                price:price,
-                totalSupply: totalSupply
-            },
+        // await db.AeroToken.update(
+        //     {
+        //         price:price,
+        //         totalSupply: totalSupply
+        //     },
  
-            {where:{address: token0}}
-        );
+        //     {where:{address: token0}}
+        // );
+
+
     } catch(err){
         console.log('Error updating AeroToken:', err);
     }

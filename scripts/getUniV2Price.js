@@ -29,14 +29,14 @@ export default async function getUniV2Price(chain, token0, priceUnit) {
             reserve1 = formatUnits(reserveRaw0, 18);
         }
         const price = reserve0 / reserve1;
-        await db.UniV2Token.update(
-            { 
-                price: price,
-                totalSupply: totalSupply
-            }, 
-            { where: { address: token0 } } 
-        );
-        // return price;
+        // await db.UniV2Token.update(
+        //     { 
+        //         price: price,
+        //         totalSupply: totalSupply
+        //     }, 
+        //     { where: { address: token0 } } 
+        // );
+        return price;
 
     } catch (error) {
         console.error('Error getting price data', error);

@@ -1,5 +1,5 @@
 // uniswapV2poolABI.js
-const erc20ABI = [
+export const erc20ABI = [
     {
         "constant": true,
         "inputs": [],
@@ -15,6 +15,4 @@ const erc20ABI = [
         "type": "function"
     }
 ];
-  
-module.exports = erc20ABI; 
   
