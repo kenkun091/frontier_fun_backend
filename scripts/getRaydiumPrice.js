@@ -1,27 +1,15 @@
 import axios from 'axios';
 import db from '../models/index.js';
+import { Connection, PublicKey } from '@solana/web3.js';
+
 
 async function getTokenSupply(token) {
 
     // fetch from the chain 
-    const url = 'https://side-restless-vineyard.solana-mainnet.quiknode.pro/ce5d318b8322e2fc172505424d2e802385d20a5b';
-    const data = {
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "getTokenSupply",
-        "params": [
-            token
-        ]
-    };
     try {
-        const response = await axios.post(url, data, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const tokenSupply = response.data.result.value.uiAmount;
-
-        return tokenSupply;
+        const connection = new Connection('https://api.mainnet-beta.solana.com');
+        const supply = await connection.getTokenSupply(new PublicKey(token));
+        return supply.value.uiAmount;
     } catch (error) {
         console.error('Error fetching token supply:', error);
     }
@@ -34,7 +22,6 @@ export default async function getRaydiumPrice(pair) {
     let tokenSupply = 0;
     let tokenData = null;
 
-
     try {
         const response = await fetch(poolUrl);
         const pool = await response.json();
@@ -42,7 +29,6 @@ export default async function getRaydiumPrice(pair) {
         // Extract token information
         const tokenInfo = pool.data[0];
         price = tokenInfo.price;
-        
         // Get total supply
         const tokenAddress = tokenInfo.mintB.address;
         tokenSupply = await getTokenSupply(tokenAddress);
