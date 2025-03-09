@@ -1,8 +1,8 @@
 const aeroTokens = [
     {
         name: 'AB4AD',
-        category: "AERO",
-        symbol: "BIO",
+        category: "BIO",
+        symbol: "AB4AD",
         chain: "BASE",
         address: "0x57414656AC535680367f519eeC9f0D7Ffe99e2D0",
         type: "first drug",
